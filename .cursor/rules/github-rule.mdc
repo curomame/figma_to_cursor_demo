@@ -1,0 +1,280 @@
+---
+description: Github PR 생성과 관련 된 요청 받을 시 참조 할 가이드
+globs: 
+alwaysApply: false
+---
+# GitHub PR 생성 가이드 (개선판)
+
+## 1. 개요 및 환경
+
+### 1.1 목적
+
+- 코드 품질 유지
+- 지속적인 코드 통합
+- 원활한 협업
+- 코드 리뷰 문화 확산
+
+### 1.2 개발 환경
+
+- 버전 관리: Git
+- 저장소: GitHub
+
+---
+
+## 2. Git Branch 전략 (git-flow)
+
+### 2.1 주요 브랜치
+
+- **main**: 서비스 운영을 위한 최종 코드
+- **develop**: 다음 개발 목표를 위한 코드 통합
+- **feature**: 신규 기능 개발 (`feature/{branch-name}`)
+- **release**: 배포 준비 (`release/v0.0.1`)
+- **hotfix**: 긴급 수정 (`hotfix/v1.0.0`)
+
+### 2.2 브랜치 생성
+
+```bash
+# feature 브랜치 생성
+git flow feature start <branch-name>
+
+# hotfix 브랜치 생성
+git flow hotfix start <branch-name> [release|main]
+```
+
+---
+
+## 3. 코드 리뷰 및 커밋 정리
+
+### 3.1 코드 리뷰 (⚠️ 매우 중요)
+
+- **모든 작업 파일 검토:** 변경 사항이 누락되지 않았는지 반드시 확인합니다.
+- 디렉토리 구조 변경에만 집중하지 말고 실제 기능 구현도 검증합니다.
+- 변수명, 함수명 오타 및 일관성, 커밋 메시지 포맷 등을 꼼꼼히 점검합니다.
+- 기능 완성도와 테스트 결과를 반드시 확인합니다.
+
+### 3.2 커밋 컨벤션
+
+#### 커밋 타입
+
+| 타입             | 설명                    |
+| ---------------- | ----------------------- |
+| feat             | 새로운 기능 구현        |
+| fix              | 버그, 오타, 변수명 수정 |
+| docs             | 문서 수정               |
+| refactor         | 코드 리팩토링           |
+| style            | 코드 스타일 변경        |
+| design           | UI 변경                 |
+| test             | 테스트 코드 추가        |
+| chore            | 빌드 설정 변경          |
+| rename           | 구조/파일명 수정        |
+| remove           | 파일 삭제               |
+| !BREAKING CHANGE | 주요 변경               |
+| !HOTFIX          | 긴급 수정               |
+
+#### 커밋 메시지 형식
+
+```bash
+# 올바른 예시 (한 줄)
+[TASK-ID] feat: 기능 구현 및 구조 개선
+
+# 잘못된 예시 (여러 줄)
+[TASK-ID] feat: 기능 구현
+- 세부 내용 1
+- 세부 내용 2
+```
+
+---
+
+## 4. PR 생성 프로세스 (⚠️ 매우 중요)
+
+### 4.1 PR 생성 전 필수 단계
+
+> ⚠️ **중요:** PR 생성 전 **반드시** 아래 단계를 순서대로 수행해야 합니다.
+
+#### 1. 커밋 정리 (Squash) - 필수
+
+```bash
+# 1. develop 브랜치 최신화
+git checkout develop
+git pull origin develop
+
+# 2. 작업 브랜치로 돌아가기
+git checkout feature/branch-name
+
+# 3. 스쿼시 방법 (다음 중 하나만 선택)
+
+## 방법 A: reset --soft (권장)
+git reset --soft develop
+git status  # 변경사항 확인
+git commit -m "[TASK-ID] type: 커밋 메시지"
+git push origin feature/branch-name -f
+
+## 방법 B: interactive rebase
+git rebase -i develop  # 에디터에서 첫 번째는 pick, 나머지는 모두 squash로 변경
+# 커밋 메시지 저장하고 나가기
+git push origin feature/branch-name -f
+```
+
+> ⚠️ **경고:** 스쿼시 후 반드시 `git log --oneline -3`로 커밋이 하나로 합쳐졌는지 확인하세요.
+
+### 4.2 PR 생성 방법 (⚠️ 항상 MCP GitHub 서비스 사용)
+
+> ⚠️ **필수:** PR 생성은 항상 `mcp_Github_create_pull_request` 도구를 사용하세요.
+
+```javascript
+// 올바른 PR 생성 방법 - 항상 이 방법만 사용
+mcp_Github_create_pull_request({
+  owner: "organization-name", // 조직/사용자 이름
+  repo: "repo-name", // 저장소 이름
+  title: "[TASK-ID] type: 작업 내용 요약", // PR 제목
+  head: "feature/branch-name", // 소스 브랜치
+  base: "develop", // 타겟 브랜치
+  body: `## 작업 내용
+
+### 기능 구현
+- 구현된 기능 설명
+
+### 구조 개선
+- 개선된 구조 설명
+
+### 코드 품질
+- 품질 개선 사항
+
+## 테스트
+- [x] 테스트 항목 1
+- [x] 테스트 항목 2`,
+});
+```
+
+> ⚠️ **경고:** 터미널 명령어(`gh pr create` 등)는 사용하지 마세요. 항상 MCP GitHub 서비스만 사용하세요.
+
+### 4.3 PR 내용 작성 가이드
+
+- **제목**: `[TASK-ID] type: 작업 내용 요약`
+- **본문**:
+
+```markdown
+## 작업 내용
+
+### 기능 구현
+
+- 구현된 기능 설명
+
+### 구조 개선
+
+- 개선된 구조 설명
+
+### 코드 품질
+
+- 품질 개선 사항
+
+## 테스트
+
+- [x] 테스트 항목 1
+- [x] 테스트 항목 2
+```
+
+---
+
+## 5. 자주 하는 실수 및 주의사항 ⚠️
+
+### 5.1 치명적인 실수
+
+1. **스쿼시 누락 또는 불완전한 스쿼시** ⚠️⚠️⚠️
+
+   - 여러 커밋을 하나로 합치지 않고 PR 생성
+   - 스쿼시 후 확인하지 않아 여전히 여러 커밋이 남아있음
+   - **해결:** PR 생성 전 반드시 `git log --oneline -3`으로 확인
+
+2. **GitHub MCP 도구 미사용** ⚠️⚠️⚠️
+
+   - 터미널 명령어로 PR 생성 시도
+   - **해결:** 항상 `mcp_Github_create_pull_request` 도구만 사용
+
+3. **불완전한 코드 리뷰**
+
+   - 파일 및 변경사항 누락 (예: 커밋 시 일부 파일이 누락되는 경우)
+   - 기능 검증 미흡
+   - 변수/함수명 오타 무시
+
+4. **테스트 부족**
+   - 기능 동작 검증 미흡
+   - 엣지 케이스 고려 부족
+
+### 5.2 일반적인 실수
+
+1. **불필요한 사용자 승인 요청**
+
+   - 조회성 git 명령어에 대해 불필요한 승인 요청 발생
+   - 연관된 명령어는 하나로 묶어 실행
+
+2. **커밋 메시지 포맷**
+   - 메시지를 여러 줄로 작성하여 혼란 발생
+   - 터미널에서 줄바꿈을 할 경우 에러가 발생하니 유의하여 작성
+
+### 5.3 변경사항 누락 및 커서 실수 주의
+
+- **커밋 전 확인:**  
+   `git status`와 `git diff` 명령어를 사용해 반드시 모든 변경사항이 포함되었는지 재확인합니다.
+- **커밋 누락 방지:**  
+   인터랙티브 리베이스나 squash 과정에서 커밋이 누락되지 않도록 주의합니다.
+- **커서(포커스) 위치:**  
+   에디터에서 커밋 메시지 작성 시 커서 위치에 따라 의도하지 않은 변경이 포함되지 않도록 확인합니다.
+
+### 5.4 History 예시
+
+#### 좋은 예시 (PR 생성 전)
+
+```
+* [TASK-001] feat: 로그인 기능 구현  <- 단일 커밋으로 스쿼시됨
+* [develop] 이전 PR들...
+```
+
+#### 나쁜 예시 (PR 생성 전)
+
+```
+* add login
+* fix bug
+* update
+* final fix
+* really final fix
+```
+
+---
+
+## 6. PR 병합 후 정리
+
+### 6.1 브랜치 정리
+
+```bash
+# 1. develop 브랜치로 전환
+git checkout develop
+git pull origin develop
+
+# 2. 로컬 브랜치 삭제
+git branch -d feature/branch-name
+
+# 3. 원격 브랜치 삭제
+git push origin --delete feature/branch-name
+```
+
+### 6.2 최종 확인
+
+- develop 브랜치 상태 확인
+- 원격 저장소 동기화 확인
+- 불필요한 브랜치 제거 확인
+
+## 7. PR 생성 체크리스트 ✅
+
+PR을 생성하기 전에 다음 체크리스트를 모두 확인하세요:
+
+- [ ] 모든 변경사항이 커밋되었는지 확인 (`git status`)
+- [ ] develop 브랜치에서 최신 변경사항을 가져옴 (`git pull origin develop`)
+- [ ] 모든 커밋을 하나로 스쿼시함 (reset --soft 또는 rebase -i)
+- [ ] 커밋이 정상적으로 스쿼시되었는지 확인 (`git log --oneline -3`)
+- [ ] 커밋 메시지가 컨벤션에 맞게 작성됨 ("[TASK-ID] type: 내용")
+- [ ] 원격 저장소에 강제 푸시함 (`git push origin branch-name -f`)
+- [ ] MCP GitHub 서비스를 사용하여 PR 생성
+- [ ] PR 제목과 본문이 가이드라인에 맞게 작성됨
+
+⚠️ **중요 참고사항:** 터미널 명령어로 PR을 생성하지 마세요. 항상 MCP GitHub 서비스를 사용하세요.

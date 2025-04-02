@@ -1,0 +1,32 @@
+---
+description: 라이브러리 사용방법 및 수정 관련 질문 시 참조
+globs: 
+alwaysApply: false
+---
+# 개발 환경
+
+## 1. OS
+- **OS**: iOS
+- **기종**: MacBook Pro 14 (M1 chip)
+
+## 2. 기본 환경
+- **Node.js**: v18.20.3
+- **npm**: v10.7.0
+- **TypeScript**: v5.2.2
+- **Vite**: v5.2.0
+
+## 3. 프레임워크 및 라이브러리
+- **React & React DOM**: v18.2.0
+- **React Router DOM**: v6.23.1
+
+## 4. 상태 관리
+- **Zustand**: 기본 상태 관리 도구
+- **디버깅 도구**: Zukeeper 포함
+- **Zustand-persist**: 상태 지속화 도구
+- **@tanstack/react-query**: 서버 상태 관리 도구
+
+## 5. UI 및 스타일링
+- **TailwindCSS**: v3.4.4 (유틸리티-퍼스트 CSS 프레임워크)
+- **SASS**: v1.77.4 (CSS 확장 기능)
+- **Material Design Icons**: 
+  - @mdi/react & @mdi/js (아이콘 라이브러리)
