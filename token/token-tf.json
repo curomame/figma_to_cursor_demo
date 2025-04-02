@@ -1,6 +1,6 @@
 {
-  "to_blue": {
-    "value": "#254100",
+  "Primary": {
+    "value": "#ff000d",
     "type": "color"
   }
 }
