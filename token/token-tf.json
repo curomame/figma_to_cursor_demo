@@ -1,10 +1,10 @@
 {
   "Primary": {
-    "value": "#0003ff",
+    "value": "#026b00",
     "type": "color"
   },
   "rad": {
-    "value": 24,
+    "value": 12,
     "type": "borderRadius"
   }
 }
