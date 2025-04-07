@@ -2,5 +2,9 @@
   "Primary": {
     "value": "#000dff",
     "type": "color"
+  },
+  "rad": {
+    "value": 24,
+    "type": "borderRadius"
   }
 }
