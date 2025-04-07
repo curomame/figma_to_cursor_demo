@@ -4,7 +4,7 @@
     "type": "color"
   },
   "rad": {
-    "value": 12,
+    "value": 24,
     "type": "borderRadius"
   }
 }
